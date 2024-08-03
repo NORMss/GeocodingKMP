@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalMaterialApi::class,
+    ExperimentalMaterialApi::class
+)
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -189,9 +191,9 @@ fun PlacesAutocomplete() {
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
         text = if (selectedPlace != null)
-            "${selectedPlace?.locality} $({selectedPlaces?.country})\n" +
+            "${selectedPlace?.locality} (${selectedPlace?.country})\n" +
                     "LAT: ${selectedPlace?.coordinates?.latitude}\n" +
-                    "LNG: ${selectedPlace?.coordinates?.latitude}"
+                    "LNG: ${selectedPlace?.coordinates?.longitude}"
         else "No place selected",
     )
     Spacer(
@@ -214,11 +216,16 @@ fun PlacesAutocomplete() {
                 onSearch = {
                     scope.launch {
                         autoComplete.search(searchQuery).getOrNull().let {
+                            println("mysearchQuery")
                             places.clear()
                             places.addAll(it?.toList() ?: emptyList())
+                            if (places.isNotEmpty())
+                                println(places.toList())
+                            else
+                                println("List unknown")
                         }
                     }
-                    exppanded != exppanded
+                    exppanded = !exppanded
                 }
             )
         )
